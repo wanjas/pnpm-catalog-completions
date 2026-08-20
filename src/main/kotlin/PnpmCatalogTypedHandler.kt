@@ -1,4 +1,4 @@
-package dev.wanjas
+package dev.wanjas.pnpmcatalogcompletions
 
 import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate

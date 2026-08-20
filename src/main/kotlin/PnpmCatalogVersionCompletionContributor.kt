@@ -1,4 +1,4 @@
-package dev.wanjas
+package dev.wanjas.pnpmcatalogcompletions
 
 import com.intellij.codeInsight.completion.CompletionContributor
 import com.intellij.codeInsight.completion.CompletionParameters
@@ -44,7 +44,7 @@ internal class PnpmCatalogVersionCompletionContributor : CompletionContributor()
 
         completeVersions(parameters, result, parameters.originalFile.virtualFile, entry.packageName)
     }
-
+    
     private fun completeVersions(
         parameters: CompletionParameters,
         result: CompletionResultSet,

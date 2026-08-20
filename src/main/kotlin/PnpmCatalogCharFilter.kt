@@ -1,4 +1,4 @@
-package dev.wanjas
+package dev.wanjas.pnpmcatalogcompletions
 
 import com.intellij.codeInsight.lookup.CharFilter
 import com.intellij.codeInsight.lookup.Lookup

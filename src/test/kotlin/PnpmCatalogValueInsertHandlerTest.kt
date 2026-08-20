@@ -1,4 +1,4 @@
-package dev.wanjas
+package dev.wanjas.pnpmcatalogcompletions
 
 import junit.framework.TestCase
 

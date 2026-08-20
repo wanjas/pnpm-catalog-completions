@@ -1,4 +1,4 @@
-package dev.wanjas
+package dev.wanjas.pnpmcatalogcompletions
 
 import com.intellij.codeInsight.completion.CompletionUtilCore
 import com.intellij.openapi.util.text.StringUtil

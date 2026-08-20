@@ -1,7 +1,7 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
-    <id>dev.wanjas.pnpm-catalog-completions</id>
+    <id>dev.wanjas.pnpmcatalogcompletions</id>
 
     <name>pnpm Catalog Completions</name>
 
@@ -43,8 +43,8 @@ catalogs:
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <completion.contributor language="yaml"
-                                implementationClass="dev.wanjas.PnpmCatalogVersionCompletionContributor"/>
-        <lookup.charFilter implementation="dev.wanjas.PnpmCatalogCharFilter"/>
-        <typedHandler implementation="dev.wanjas.PnpmCatalogTypedHandler"/>
+                                implementationClass="dev.wanjas.pnpmcatalogcompletions.PnpmCatalogVersionCompletionContributor"/>
+        <lookup.charFilter implementation="dev.wanjas.pnpmcatalogcompletions.PnpmCatalogCharFilter"/>
+        <typedHandler implementation="dev.wanjas.pnpmcatalogcompletions.PnpmCatalogTypedHandler"/>
     </extensions>
 </idea-plugin>
