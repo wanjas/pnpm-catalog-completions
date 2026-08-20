@@ -3,34 +3,48 @@
     <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
     <id>dev.wanjas.pnpm-catalog-completions</id>
 
-    <!-- Public plugin name should be written in Title Case.
-     Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-name -->
-    <name>Pnpm-catalog-completions</name>
+    <name>pnpm Catalog Completions</name>
 
-    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor url="https://www.yourcompany.com">YourCompany</vendor>
+    <vendor url="https://github.com/wanjas">wanjas</vendor>
 
-    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
-         Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-        Enter short description for your plugin here.<br>
-        <em>most HTML tags may be used</em>
+        Adds npm version code completion to <b>pnpm catalogs</b>.<br>
+        <br>
+        In <code>pnpm-workspace.yaml</code>, invoke code completion on the version of any entry under
+        <code>catalog:</code> or <code>catalogs:</code> and get the list of versions published to the
+        npm registry &mdash; exactly the completion the IDE already offers for
+        <code>package.json</code> dependencies, including <code>^</code>/<code>~</code> range
+        variants and distribution tags.<br>
+        <br>
+        <pre>
+catalog:
+  react: ^18.3.1
+catalogs:
+  react17:
+    react: ^17.0.2
+        </pre>
+        Versions come from the same npm registry service the IDE uses for
+        <code>package.json</code>, so custom registries configured in <code>.npmrc</code> are
+        honoured.
         ]]></description>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
-    <depends>com.intellij.modules.json</depends>
-    <depends>org.jetbrains.kotlin</depends>
+    <depends>com.intellij.modules.platform</depends>
+    <!-- YAML PSI for pnpm-workspace.yaml. -->
+    <depends>org.jetbrains.plugins.yaml</depends>
+    <!-- NpmRegistryService. Implies com.intellij.modules.ultimate, so this plugin is for
+         IDEA Ultimate / WebStorm / PhpStorm / etc., not IDEA Community. -->
+    <depends>JavaScript</depends>
 
     <resource-bundle>messages.MyMessageBundle</resource-bundle>
 
     <!-- Extensions defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="MyToolWindow" factoryClass="dev.wanjas.MyToolWindowFactory"
-                    icon="AllIcons.Toolwindows.ToolWindowPalette"/>
-    </extensions>
-    <extensions defaultExtensionNs="org.jetbrains.kotlin">
-        <supportsKotlinPluginMode supportsK2="true"/>
+        <completion.contributor language="yaml"
+                                implementationClass="dev.wanjas.PnpmCatalogVersionCompletionContributor"/>
+        <lookup.charFilter implementation="dev.wanjas.PnpmCatalogCharFilter"/>
+        <typedHandler implementation="dev.wanjas.PnpmCatalogTypedHandler"/>
     </extensions>
 </idea-plugin>

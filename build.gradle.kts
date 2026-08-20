@@ -16,7 +16,10 @@ dependencies {
         testFramework(TestFrameworkType.Platform)
 
         // Add plugin dependencies for compilation here:
-        bundledPlugin("org.jetbrains.kotlin")
-        bundledPlugin("com.intellij.modules.json")
+        // YAML PSI (org.jetbrains.yaml.*) for reading pnpm-workspace.yaml.
+        bundledPlugin("org.jetbrains.plugins.yaml")
+        // NpmRegistryService/AvailablePackageVersions — the same npm metadata source that
+        // package.json version completion uses. Ultimate-only, hence <depends>JavaScript</depends>.
+        bundledPlugin("JavaScript")
     }
 }

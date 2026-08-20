@@ -4,10 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this project is
 
-An IntelliJ Platform plugin (Kotlin, Gradle) scaffolded from the JetBrains plugin template. The
-name signals the intended feature — completions for pnpm workspace **catalog:** protocol entries in
-`package.json` — but none of that is implemented yet. Everything under `src/main/kotlin` is still
-template demo code (`MyToolWindowFactory` shuffles a random number).
+An IntelliJ Platform plugin (Kotlin, Gradle) scaffolded from the JetBrains plugin template. 
+The plugin is intended to provide completions for available versions for packes listed in catalogs in pnpm-workspace.yaml file. 
+Version completion should work exactly the same way as in package.json files, but for pnpm-workspace.yaml files. 
+
+This is implemented. `PnpmCatalogVersionCompletionContributor` is a port of the platform's own
+`com.intellij.javascript.nodejs.packageJson.codeInsight.PackageJsonCompletionContributor` (closed
+source, in the bundled JavaScript plugin) onto YAML PSI, so both paths behave alike and share one
+npm metadata cache. When changing completion behaviour, decompile that class and match it rather
+than inventing new rules — it is the specification.
+
 
 ## Commands
 
@@ -21,7 +27,7 @@ All builds go through the Gradle wrapper; there is no npm/pnpm toolchain here de
 ./gradlew buildPlugin     # produce the distributable zip in build/distributions
 ```
 
-Single test (no tests exist yet; `src/test` must be created first):
+Single test:
 
 ```bash
 ./gradlew test --tests "dev.wanjas.SomeTest"
@@ -38,8 +44,16 @@ Run Verifications).
   nesting. Keep new files consistent with whichever layout is in place.
 - **`src/main/resources/META-INF/plugin.xml` is the wiring file.** Any new completion contributor,
   inspection, action, or service must be registered there as an `<extensions>` entry — a Kotlin
-  class alone does nothing. The plugin already `<depends>` on `com.intellij.modules.json` (needed to
-  touch `package.json` PSI) and `org.jetbrains.kotlin`, and declares K2 mode support.
+  class alone does nothing. The plugin `<depends>` on `com.intellij.modules.platform`,
+  `org.jetbrains.plugins.yaml` (YAML PSI) and `JavaScript` (the npm registry service).
+- **The `JavaScript` dependency makes this an Ultimate-tier plugin.** That plugin declares
+  `com.intellij.modules.ultimate`, so this one loads in IDEA Ultimate / WebStorm / PhpStorm / etc.,
+  but not IDEA Community. Dropping that constraint would mean reimplementing npm metadata fetching
+  plus `.npmrc` registry, scope and auth handling.
+- **Most of the JS plugin's completion helpers are Kotlin `internal`** and unreachable from here —
+  `PackageJsonCompletionUtil` and `PublicNpmRegistryServiceImpl` among them. Only
+  `NpmRegistryService` and `AvailablePackageVersions` are public. Check visibility before planning to
+  reuse anything from that plugin.
 - **Target platform is pinned in `build.gradle.kts`** via `intellijIdea("2025.3.5")` in the
   `intellijPlatform` dependencies block. Bundled plugin dependencies (`bundledPlugin(...)`) declared
   there must be mirrored by `<depends>` entries in `plugin.xml`, and vice versa.
@@ -56,8 +70,18 @@ Run Verifications).
 - `CHANGELOG.md` is managed by the `org.jetbrains.changelog` plugin — edit the `[Unreleased]`
   section rather than hand-rolling release headers.
 
-## Template leftovers worth fixing before shipping
+## Testing completion
 
-`plugin.xml` still carries placeholder `<vendor>` (`YourCompany`) and `<description>` text, and the
-plugin `<name>` is the raw project name. The demo tool window and `MyToolWindowFactory` should be
-removed once real functionality lands.
+`PnpmCatalogVersionCompletionTest` substitutes a fake `NpmRegistryService` project service
+(`project.replaceService(...)`, from the Kotlin top-level `com.intellij.testFramework.replaceService`
+— not `ServiceContainerUtil.replaceService`), so the suite runs offline. Add registry fixtures as
+abbreviated-metadata JSON (`dist-tags` + `versions`) parsed by
+`AvailablePackageVersions.parseFromPackageMetadata`.
+
+Two traps when writing PSI-level tests against a catalog value:
+
+- Completion never sees an empty value. The platform substitutes a dummy identifier at the caret
+  first, so `react: <caret>` in a raw-PSI test resolves to the line break, which sits *outside* the
+  `YAMLKeyValue`. Write `react: <caret>$DUMMY_IDENTIFIER_TRIMMED` to get the shape production sees.
+- `PlainPrefixMatcher(prefix, true)` matches strictly, so an item is only offered when it starts with
+  what is already typed. A test asserting `^18.3.1` must not place the caret after `^17.0`.
