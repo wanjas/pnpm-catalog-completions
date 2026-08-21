@@ -15,6 +15,7 @@ import org.jetbrains.yaml.YAMLLanguage
  * Char filters are application-wide, so this is scoped to YAML inside `pnpm-workspace.yaml`.
  */
 internal class PnpmCatalogCharFilter : CharFilter() {
+    private val RANGE_CHARS = "@/-.^~<>=*"
 
     override fun acceptChar(c: Char, prefixLength: Int, lookup: Lookup): Result? {
         if (!lookup.isCompletion) return null
@@ -24,9 +25,5 @@ internal class PnpmCatalogCharFilter : CharFilter() {
 
         // `@/-` for scoped and hyphenated names, `.^~<>=*` for the range syntax itself.
         return if (StringUtil.containsChar(RANGE_CHARS, c)) Result.ADD_TO_PREFIX else null
-    }
-
-    private companion object {
-        private const val RANGE_CHARS = "@/-.^~<>=*"
     }
 }

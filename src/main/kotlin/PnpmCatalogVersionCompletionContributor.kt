@@ -36,7 +36,6 @@ import java.util.concurrent.Callable
  * on a repeated invocation.
  */
 internal class PnpmCatalogVersionCompletionContributor : CompletionContributor(), DumbAware {
-
     override fun fillCompletionVariants(parameters: CompletionParameters, result: CompletionResultSet) {
         if (!PnpmWorkspaceCatalogs.isPnpmWorkspaceFile(parameters.originalFile)) return
         val entry = PnpmWorkspaceCatalogs.findCatalogEntry(parameters.position) ?: return
@@ -84,9 +83,9 @@ internal class PnpmCatalogVersionCompletionContributor : CompletionContributor()
                 addVersionItem(sorted, "", tag.first, tag.second?.rawVersion, order++)
             }
         }
-        if (candidates.isNotEmpty() && prefix.isEmpty()) {
-            sorted.addLookupAdvertisement(MyMessageBundle.message("completion.advertisement.latest.versions"))
-        }
+//        if (candidates.isNotEmpty() && prefix.isEmpty()) {
+//            sorted.addLookupAdvertisement(MyMessageBundle.message("completion.advertisement.latest.versions"))
+//        }
     }
 
     /**
@@ -161,8 +160,9 @@ internal class PnpmCatalogVersionCompletionContributor : CompletionContributor()
                 ApplicationUtil.runWithCheckCanceled(future, indicator)
             }, indicator)
         } catch (e: ProcessCanceledException) {
-            LOG.info("Fetching versions for '$packageName' cancelled")
+//            LOG.info("Fetching versions for '$packageName' cancelled")
             AvailablePackageVersions.createEmpty()
+            throw e
         } catch (e: Exception) {
             LOG.info("Cannot fetch versions for '$packageName'", e)
             AvailablePackageVersions.createEmpty()
