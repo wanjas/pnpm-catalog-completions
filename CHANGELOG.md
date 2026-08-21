@@ -14,6 +14,3 @@
   registry, scope and auth configuration are shared with `package.json` completion.
 - The popup opens on its own after `<package>: ` and survives typing range punctuation.
 
-### Removed
-
-- The template's demo tool window.

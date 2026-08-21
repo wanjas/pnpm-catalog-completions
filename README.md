@@ -1,152 +1,83 @@
-# Pnpm-catalog-completions
+# pnpm Catalog Completions
 
-[![Twitter Follow](https://img.shields.io/badge/follow-%40JBPlatform-1DA1F2?logo=twitter)](https://twitter.com/JBPlatform)
-[![Developers Forum](https://img.shields.io/badge/JetBrains%20Platform-Join-blue)][jb:forum]
+An IntelliJ Platform plugin that adds npm version code completion to
+[pnpm catalogs](https://pnpm.io/catalogs) in `pnpm-workspace.yaml`.
 
-## Overview
+## What it does
 
-This repository implements an IntelliJ Platform plugin.
+Invoke code completion on the version of any entry under `catalog:` or `catalogs:` and you get the
+list of versions published to the npm registry — the same completion the IDE already offers for
+`package.json` dependencies:
 
-## Demo Functionality
-
-The sample plugin adds a `My Tool Window` tool window with a simple functionality of shuffling a random number.
-
-## Plugin structure
-
-A generated project contains the following content structure:
-
-```
-.
-├── .run/                   Predefined Run/Debug Configurations
-├── gradle
-│   ├── wrapper/            Gradle Wrapper
-│   ├── libs.versions.toml  Version catalog
-├── src                     Plugin sources
-│   └── main
-│       ├── kotlin/         Kotlin production sources
-│       └── resources/      Plugin resources
-│           ├── META-INF/   Plugin configuration file and logo
-│           └── messages/   Message bundles
-├── .gitignore              Git ignoring rules
-├── build.gradle.kts        Gradle build configuration
-├── gradle.properties       Gradle configuration properties
-├── gradlew                 *nix Gradle Wrapper script
-├── gradlew.bat             Windows Gradle Wrapper script
-├── README.md               This file
-└── settings.gradle.kts     Gradle project settings
+```yaml
+catalog:
+  react: ^18.3.1     # <- completion here
+catalogs:
+  react17:
+    react: ^17.0.2   # <- and here
 ```
 
-In addition to the configuration files, the most crucial part is the `src` directory, which contains our implementation
-and the manifest for our plugin – [plugin.xml][file:plugin.xml].
+- `^`/`~`/exact range variants, with the range kind you have already typed listed first
+- `latest` at the top; the full version list once you type a prefix or invoke completion twice
+- distribution tag names (`next`, `beta`, …) offered as values
+- the popup opens on its own after `<package>: ` and survives typing range punctuation
 
-> [!NOTE]
-> To use Java in your plugin, create the `/src/main/java` directory.
+Versions are read through the IDE's own npm registry service, so the metadata cache is shared with
+`package.json` completion and any registry, scope or auth configuration in your `.npmrc` is honored.
 
-The plugin logo is placed in `src/main/resources/META-INF/pluginIcon.svg`. See [Plugin Logo][docs:logo] for more
-information and logo requirements.
+## Requirements
 
-## Build script
+The plugin depends on the bundled **JavaScript** plugin, which implies
+`com.intellij.modules.ultimate`. It therefore runs in **IntelliJ IDEA Ultimate, WebStorm, PhpStorm,
+RubyMine, PyCharm Professional, GoLand** and other commercial IDEs — but **not** IntelliJ IDEA
+Community Edition.
 
-The [build.gradle.kts][file:build.gradle.kts] is the core of the project definition. It applies three Gradle plugins:
+Minimum IDE version: **2025.1** (build 251). There is no upper bound.
 
-| Plugin                            | Description                                                                      |
-|-----------------------------------|----------------------------------------------------------------------------------|
-| `org.jetbrains.kotlin.jvm`        | Adds Kotlin support                                                              |
-| `org.jetbrains.changelog`         | Simplifies patching the [CHANGELOG.md][file:CHANGELOG.md] file                   |
-| `org.jetbrains.intellij.platform` | The [IntelliJ Platform Gradle Plugin][docs:intellij-platform-gradle-plugin-docs] |
+## Installation
 
-The `intellijPlatform` dependencies block selects the IDE to compile against:
+From the IDE: <kbd>Settings</kbd> → <kbd>Plugins</kbd> → <kbd>Marketplace</kbd>, search for
+"pnpm Catalog Completions", and click <kbd>Install</kbd>.
 
-```kotlin
-intellijIdea("2025.3.5")
+Or install a build from disk: download a zip from the
+[releases page](https://github.com/wanjas/pnpm-catalog-completions/releases), then
+<kbd>Settings</kbd> → <kbd>Plugins</kbd> → <kbd>⚙</kbd> → <kbd>Install Plugin from Disk…</kbd>.
+
+## Building from source
+
+Everything goes through the Gradle wrapper; there is no npm/pnpm toolchain here despite the name.
+
+```bash
+./gradlew runIde        # sandbox IDE with the plugin installed
+./gradlew check         # run the tests
+./gradlew verifyPlugin  # IntelliJ Plugin Verifier against every supported IDE
+./gradlew buildPlugin   # distributable zip in build/distributions
 ```
 
-See [Target Versions][docs:target-version] for more information.
+The target IDE and the compatibility floor are set by `platformVersion` and `pluginSinceBuild` in
+[`gradle.properties`](./gradle.properties). Keep them on the same release branch.
 
-The `intellijPlatform` dependencies block also contains a dependency on the platform testing framework:
+## Releasing
 
-```kotlin
-testFramework(TestFrameworkType.Platform)
+The first upload has to be done by hand at
+<https://plugins.jetbrains.com/plugin/add> — `publishPlugin` can only update a listing that already
+exists. After that:
+
+```bash
+# One-off: generate a signing certificate into the gitignored signing/ directory.
+mkdir -p signing
+openssl genpkey -aes-256-cbc -algorithm RSA -out signing/private.pem -pkeyopt rsa_keygen_bits:4096
+openssl req -key signing/private.pem -new -x509 -days 365 -out signing/chain.crt
+
+./gradlew patchChangelog          # moves [Unreleased] into a versioned section
+export PRIVATE_KEY_PASSWORD=…     # the passphrase used above
+export PUBLISH_TOKEN=…            # Marketplace profile -> My Tokens
+./gradlew clean check verifyPlugin
+./gradlew publishPlugin           # signs, then uploads
 ```
 
-See [Testing][docs:testing] for more information
+Bump `version` in `gradle.properties` before each release; it is stamped into the plugin descriptor.
 
-## Plugin configuration file
+## License
 
-The plugin configuration file is a [plugin.xml][file:plugin.xml] file located in the `src/main/resources/META-INF`
-directory. It provides general information about the plugin, its dependencies, extensions, and listeners.
-
-You can read more about this file in the [Plugin Configuration File][docs:plugin.xml] section of our documentation.
-
-### Plugin ID and name
-
-Generated plugin ID and name may require adjustment.
-
-These values are generated based on _Group ID_ and _Artifact ID_ provided in the IDE Plugin wizard. It is recommended to
-review `<id>` and `<name>` elements in the plugin.xml file, and adjust them if needed.
-
-Please note that Gradle properties `rootProject.name` and `project.group` don't need to match the `<id>` and `<name>`
-elements. There is no IntelliJ Platform-related reason they should as they serve different functions.
-
-## Predefined Run/Debug configurations
-
-Within the default project structure, there is a `.run` directory provided containing predefined *Run/Debug
-configurations* that expose corresponding Gradle tasks:
-
-| Configuration name  | Description                                                                                                                                                                           |
-|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Run IDE with Plugin | Runs [`:runIde`][docs:intellij-platform-gradle-plugin-runIde] IntelliJ Platform Gradle Plugin task. Use the *Debug* icon for plugin debugging.                                        |
-| Run Tests           | Runs [`:check`][gradle:lifecycle-tasks] Gradle task.                                                                                                                                  |
-| Run Verifications   | Runs [`:verifyPlugin`][docs:intellij-platform-gradle-plugin-verifyPlugin] IntelliJ Platform Gradle Plugin task to check the plugin compatibility against the specified IntelliJ IDEs. |
-
-> [!NOTE]
-> You can find the logs from the running task in the `idea.log` tab.
-
-## Publishing the plugin
-
-> [!TIP]
-> Make sure to follow all guidelines listed in [Publishing a Plugin][docs:publishing] to follow all recommended and
-required steps.
-
-Releasing a plugin to [JetBrains Marketplace](https://plugins.jetbrains.com) is a straightforward operation that uses
-the `publishPlugin` Gradle task provided by
-the [intellij-platform-gradle-plugin][docs:intellij-platform-gradle-plugin-docs].
-
-You can also upload the plugin to the [JetBrains Plugin Repository](https://plugins.jetbrains.com/plugin/upload)
-manually via UI.
-
-## Useful links
-
-- [IntelliJ Platform SDK Plugin SDK][docs]
-- [IntelliJ Platform Gradle Plugin Documentation][docs:intellij-platform-gradle-plugin-docs]
-- [IntelliJ Platform Explorer][jb:ipe]
-- [JetBrains Marketplace Quality Guidelines][jb:quality-guidelines]
-- [IntelliJ Platform UI Guidelines][jb:ui-guidelines]
-- [JetBrains Marketplace Paid Plugins][jb:paid-plugins]
-- [IntelliJ SDK Code Samples][gh:code-samples]
-
-[docs]: https://plugins.jetbrains.com/docs/intellij
-[docs:plugin.xml]: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html?from=IJPluginReadmeFile
-[docs:publishing]: https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginReadmeFile
-[docs:intellij-platform-gradle-plugin-docs]: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html?from=IJPluginReadmeFile
-[docs:intellij-platform-gradle-plugin-runIde]: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-tasks.html?from=IJPluginReadmeFile#runIde
-[docs:intellij-platform-gradle-plugin-verifyPlugin]: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-tasks.html?from=IJPluginReadmeFile#verifyPlugin
-[docs:logo]: https://plugins.jetbrains.com/docs/intellij/plugin-icon-file.html?from=IJPluginReadmeFile
-[docs:target-version]: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html?from=IJPluginReadmeFile#target-versions
-[docs:testing]: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html?from=IJPluginReadmeFile#testing
-
-[file:build.gradle.kts]: ./build.gradle.kts
-[file:CHANGELOG.md]: ./CHANGELOG.md
-[file:gradle.properties]: ./gradle.properties
-[file:plugin.xml]: ./src/main/resources/META-INF/plugin.xml
-
-[gh:code-samples]: https://github.com/JetBrains/intellij-sdk-code-samples
-
-[gradle:lifecycle-tasks]: https://docs.gradle.org/current/userguide/java_plugin.html#lifecycle_tasks
-
-[jb:github]: https://github.com/JetBrains/.github/blob/main/profile/README.md
-[jb:forum]: https://platform.jetbrains.com/
-[jb:quality-guidelines]: https://plugins.jetbrains.com/docs/marketplace/quality-guidelines.html
-[jb:paid-plugins]: https://plugins.jetbrains.com/docs/marketplace/paid-plugins-marketplace.html
-[jb:ipe]: https://jb.gg/ipe
-[jb:ui-guidelines]: https://jetbrains.github.io/ui
+[MIT](./LICENSE)

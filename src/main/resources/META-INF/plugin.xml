@@ -1,5 +1,5 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
-<idea-plugin>
+<idea-plugin url="https://github.com/wanjas/pnpm-catalog-completions">
     <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
     <id>com.github.wanjas.pnpmcatalogcompletions</id>
 
@@ -24,8 +24,7 @@ catalogs:
     react: ^17.0.2
         </pre>
         Versions come from the same npm registry service the IDE uses for
-        <code>package.json</code>, so custom registries configured in <code>.npmrc</code> are
-        honoured.
+        <code>package.json</code>, so custom registries configured in <code>.npmrc</code> are honored.
         ]]></description>
 
     <!-- Product and plugin compatibility requirements.

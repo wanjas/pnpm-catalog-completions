@@ -1,6 +1,6 @@
 import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
 
-rootProject.name = "pnpmcatalogcompletions"
+rootProject.name = "pnpm-catalog-completions"
 
 pluginManagement {
     plugins {

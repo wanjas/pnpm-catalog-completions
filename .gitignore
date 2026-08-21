@@ -1,4 +1,10 @@
 .gradle
 .idea
 .intellijPlatform
+.kotlin
 build
+
+# Plugin signing material — never commit these.
+signing/
+*.pem
+*.crt

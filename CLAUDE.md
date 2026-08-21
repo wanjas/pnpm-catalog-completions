@@ -54,13 +54,21 @@ Run Verifications).
   `PackageJsonCompletionUtil` and `PublicNpmRegistryServiceImpl` among them. Only
   `NpmRegistryService` and `AvailablePackageVersions` are public. Check visibility before planning to
   reuse anything from that plugin.
-- **Target platform is pinned in `build.gradle.kts`** via `intellijIdea("2025.3.5")` in the
-  `intellijPlatform` dependencies block. Bundled plugin dependencies (`bundledPlugin(...)`) declared
-  there must be mirrored by `<depends>` entries in `plugin.xml`, and vice versa.
-- **All user-facing strings go through `MyMessageBundle`**, backed by
-  `src/main/resources/messages/MyMessageBundle.properties` and declared as the `<resource-bundle>`
-  in `plugin.xml`. The `@PropertyKey` annotation gives IDE-side key validation, so add the property
-  before referencing the key.
+- **Target platform is set by `gradle.properties`**, not hard-coded: `platformVersion` feeds
+  `intellijIdeaUltimate(...)` in the `intellijPlatform` dependencies block, and `pluginSinceBuild`
+  feeds both `pluginConfiguration.ideaVersion.sinceBuild` and the `verifyPlugin` IDE selection. Keep
+  the two on the same release branch. Use `intellijIdeaUltimate`, never `intellijIdea` -- the latter
+  resolves the unified `com.jetbrains.intellij.idea:idea` artifact that only exists from 2025.3.
+  Bundled plugin dependencies (`bundledPlugin(...)`) declared there must be mirrored by `<depends>`
+  entries in `plugin.xml`, and vice versa.
+- **The compatibility floor is 2025.1 (build 251)** and is a hard limit, not a preference:
+  `NpmRegistryService.getInstance(Project)` does not exist in 2024.3 or earlier. The tighter
+  constraint is `FakeNpmRegistryService` in the tests -- it subclasses the platform abstract class
+  `NpmRegistryService`, so every abstract member must match exactly. Lowering the floor means the
+  fake stops compiling, and there is no partial-implementation escape hatch.
+- **There is no message bundle.** `MyMessageBundle.kt` and the `<resource-bundle>` registration were
+  removed in `63f7bc4`; the orphaned properties file is gone too. Add a bundle back before
+  introducing user-facing strings.
 - **Versions live in two places**: Gradle plugin versions in `settings.gradle.kts` `pluginManagement`
   (Kotlin, changelog, IntelliJ Platform Gradle Plugin), library versions in the
   `gradle/libs.versions.toml` version catalog.
