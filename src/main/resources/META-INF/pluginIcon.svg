@@ -1,12 +1,16 @@
-<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M32.0845 7.94025V4H24.0203V7.9896H16.029V4H7.91553V7.94025H4V36H16.0044V32.0045C16.0058 30.9457 16.4274 29.9308 17.1766 29.1826C17.9258 28.4345 18.9412 28.0143 20 28.0143C21.0588 28.0143 22.0743 28.4345 22.8234 29.1826C23.5726 29.9308 23.9942 30.9457 23.9956 32.0045V36H36V7.94025H32.0845Z"
-          fill="url(#paint0_linear)"/>
-    <defs>
-        <linearGradient id="paint0_linear" x1="2.94192" y1="4.89955" x2="37.7772" y2="39.7345"
-                        gradientUnits="userSpaceOnUse">
-            <stop offset="0.15937" stop-color="#3BEA62"/>
-            <stop offset="0.5404" stop-color="#3C99CC"/>
-            <stop offset="0.93739" stop-color="#6B57FF"/>
-        </linearGradient>
-    </defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" role="img" aria-labelledby="title desc">
+  <title id="title">pnpm catalog completions</title>
+  <desc id="desc">The original pnpm tile mark with an open-book catalog badge in its lower-right corner.</desc>
+  <!-- Original pnpm logo, scaled from its 180px source canvas to 36px. -->
+  <path fill="#fff" d="M2 2h36v36H2z"/>
+  <path fill="#f9ad00" d="M4 4h10v10H4zm11 0h10v10H15zm11 0h10v10H26zM26 15h10v10H26z"/>
+  <path fill="#4e4e4e" d="M15 15h10v10H15zM4 26h10v10H4zm11 0h10v10H15zm11 0h10v10H26z"/>
+  <!-- Catalog badge: white pages and a pnpm-orange cover accent. -->
+  <g transform="translate(-7.625 -8.125) scale(1.25)">
+    <path fill="#fff" d="M21 23.5c2.8-1.1 5.3-.9 7 1.1 1.8-2 4.2-2.2 7-1.1v10.8c-2.8-1.1-5.3-.9-7 1.1-1.8-2-4.2-2.2-7-1.1Z"/>
+    <path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 23.5c2.8-1.1 5.3-.9 7 1.1 1.8-2 4.2-2.2 7-1.1v10.8c-2.8-1.1-5.3-.9-7 1.1-1.8-2-4.2-2.2-7-1.1Z"/>
+    <path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 23.5c2.8-1.1 5.3-.9 7 1.1 1.8-2 4.2-2.2 7-1.1v10.8c-2.8-1.1-5.3-.9-7 1.1-1.8-2-4.2-2.2-7-1.1Zm7 1.1v10.8"/>
+    <path fill="none" stroke="#f9ad00" stroke-linecap="round" stroke-width="1.5" d="M23.5 28h2.5m4.5 0H33"/>
+    <path fill="none" stroke="#4e4e4e" stroke-linecap="round" stroke-width="1.5" d="M23.5 31h2.5m4.5 0H33"/>
+  </g>
 </svg>
