@@ -1,4 +1,4 @@
-package dev.wanjas.pnpmcatalogcompletions
+package com.github.wanjas.pnpmcatalogcompletions
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser

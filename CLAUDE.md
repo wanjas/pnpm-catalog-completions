@@ -30,8 +30,8 @@ All builds go through the Gradle wrapper; there is no npm/pnpm toolchain here de
 Single test:
 
 ```bash
-./gradlew test --tests "dev.wanjas.pnpmcatalogcompletions.SomeTest"
-./gradlew test --tests "dev.wanjas.pnpmcatalogcompletions.SomeTest.someMethod"
+./gradlew test --tests "com.github.wanjas.pnpmcatalogcompletions.SomeTest"
+./gradlew test --tests "com.github.wanjas.pnpmcatalogcompletions.SomeTest.someMethod"
 ```
 
 The `.run/` directory holds equivalent IDE run configurations (Run IDE with Plugin / Run Tests /
@@ -39,7 +39,7 @@ Run Verifications).
 
 ## Architecture and conventions
 
-- **Package root is `dev.wanjas.pnpmcatalogcompletions`** (matches `group` in `gradle.properties` and the `<id>` prefix in
+- **Package root is `com.github.wanjas.pnpmcatalogcompletions`** (matches `group` in `gradle.properties` and the `<id>` prefix in
   `plugin.xml`), but sources sit directly in `src/main/kotlin` without the matching directory
   nesting. Keep new files consistent with whichever layout is in place.
 - **`src/main/resources/META-INF/plugin.xml` is the wiring file.** Any new completion contributor,

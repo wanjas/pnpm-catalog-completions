@@ -1,4 +1,4 @@
-package dev.wanjas.pnpmcatalogcompletions
+package com.github.wanjas.pnpmcatalogcompletions
 
 import com.intellij.codeInsight.completion.InsertHandler
 import com.intellij.codeInsight.completion.InsertionContext
