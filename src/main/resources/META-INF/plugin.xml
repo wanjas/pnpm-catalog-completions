@@ -5,26 +5,17 @@
 
     <name>pnpm Catalog Completions</name>
 
-    <vendor url="https://github.com/wanjas">wanjas</vendor>
+    <vendor url="https://github.com/wanjas">Ivan Belikov</vendor>
 
     <description><![CDATA[
-        Adds npm version code completion to <b>pnpm catalogs</b>.<br>
-        <br>
-        In <code>pnpm-workspace.yaml</code>, invoke code completion on the version of any entry under
+        <p>Adds npm packages version code completion to <a href="https://pnpm.io/catalogs">pnpm catalogs</a>.</p>
+        <p>In <code>pnpm-workspace.yaml</code>, invoke code completion on the version of any entry under
         <code>catalog:</code> or <code>catalogs:</code> and get the list of versions published to the
         npm registry &mdash; exactly the completion the IDE already offers for
         <code>package.json</code> dependencies, including <code>^</code>/<code>~</code> range
-        variants and distribution tags.<br>
-        <br>
-        <pre>
-catalog:
-  react: ^18.3.1
-catalogs:
-  react17:
-    react: ^17.0.2
-        </pre>
-        Versions come from the same npm registry service the IDE uses for
-        <code>package.json</code>, so custom registries configured in <code>.npmrc</code> are honored.
+        variants and distribution tags.</p>
+        <p>Versions come from the same npm registry service the IDE uses for
+        <code>package.json</code>, so custom registries configured in <code>.npmrc</code> should be honored.</p>
         ]]></description>
 
     <!-- Product and plugin compatibility requirements.

@@ -54,6 +54,7 @@ internal class PnpmCatalogValueInsertHandler(private val value: String) : Insert
             return value.contains(": ") || value.contains(" #") || value.endsWith(":")
         }
 
+        // Respect the existing quoting style
         private fun quote(value: String, quoteChar: Char): String = when (quoteChar) {
             '"' -> "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
             else -> "'" + value.replace("'", "''") + "'"

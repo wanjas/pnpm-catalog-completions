@@ -32,20 +32,9 @@ The plugin depends on the bundled **JavaScript** plugin, which implies
 RubyMine, PyCharm Professional, GoLand** and other commercial IDEs — but **not** IntelliJ IDEA
 Community Edition.
 
-Minimum IDE version: **2025.1** (build 251). There is no upper bound.
-
-## Installation
-
-From the IDE: <kbd>Settings</kbd> → <kbd>Plugins</kbd> → <kbd>Marketplace</kbd>, search for
-"pnpm Catalog Completions", and click <kbd>Install</kbd>.
-
-Or install a build from disk: download a zip from the
-[releases page](https://github.com/wanjas/pnpm-catalog-completions/releases), then
-<kbd>Settings</kbd> → <kbd>Plugins</kbd> → <kbd>⚙</kbd> → <kbd>Install Plugin from Disk…</kbd>.
+Minimum IDE version: **2025.1** (build 251).
 
 ## Building from source
-
-Everything goes through the Gradle wrapper; there is no npm/pnpm toolchain here despite the name.
 
 ```bash
 ./gradlew runIde        # sandbox IDE with the plugin installed

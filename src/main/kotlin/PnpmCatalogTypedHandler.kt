@@ -11,7 +11,7 @@ import com.intellij.psi.PsiFile
  * `PackageJsonCompletionTypedHandler`. Without this the list would only ever appear on an explicit
  * completion invocation.
  *
- * Scheduling a popup is not the same as showing one: the request is only honoured if a contributor
+ * Scheduling a popup is not the same as showing one: the request is only honored if a contributor
  * actually produces items, so [PnpmCatalogVersionCompletionContributor]'s own guards decide whether
  * anything appears. That keeps this check cheap and free of PSI commits.
  */

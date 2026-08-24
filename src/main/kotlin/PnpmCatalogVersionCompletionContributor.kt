@@ -83,9 +83,6 @@ internal class PnpmCatalogVersionCompletionContributor : CompletionContributor()
                 addVersionItem(sorted, "", tag.first, tag.second?.rawVersion, order++)
             }
         }
-//        if (candidates.isNotEmpty() && prefix.isEmpty()) {
-//            sorted.addLookupAdvertisement(MyMessageBundle.message("completion.advertisement.latest.versions"))
-//        }
     }
 
     /**
