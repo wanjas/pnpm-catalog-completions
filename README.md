@@ -3,6 +3,9 @@
 An IntelliJ Platform plugin that adds npm version code completion to
 [pnpm catalogs](https://pnpm.io/catalogs) in `pnpm-workspace.yaml`.
 
+> There is a feature request for JetBrains to support this out of the box, but at the time of writing this there is no indication it will happen any time soon.
+> [https://youtrack.jetbrains.com/projects/WEB/issues/WEB-68941/Support-for-PNPM-Catalog](https://youtrack.jetbrains.com/projects/WEB/issues/WEB-68941/Support-for-PNPM-Catalog)
+
 ## What it does
 
 Invoke code completion on the version of any entry under `catalog:` or `catalogs:` and you get the
